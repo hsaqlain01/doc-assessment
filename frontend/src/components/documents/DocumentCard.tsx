@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom';
 import ViewIcon from 'src/assets/svg/view';
 import { Document } from 'src/types/document.types';
 import { useAppSelector } from 'src/hooks/useRedux';
@@ -7,6 +6,7 @@ import Clock from 'src/assets/svg/clock';
 import Upload from 'src/assets/svg/upload';
 import { RootState } from '../../store/store';
 import { DocumentActions } from './DocumentActions';
+import { useNavigate } from 'react-router-dom';
 
 interface DocumentCardProps {
   document: Document;
@@ -31,16 +31,18 @@ export const DocumentCard = ({ document }: DocumentCardProps) => {
   return (
     <div className='bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300'>
       <div className='p-4 md:p-6'>
-        <div className='flex flex-col sm:flex-row justify-between items-start gap-3'>
-          <div className='w-full sm:w-auto'>
-            <h3 className='text-base md:text-lg font-medium text-gray-900 line-clamp-2'>
+        <div className='flex justify-between items-start gap-4'>
+          <div className='max-w-3xl'>
+            <h3 className='text-base md:text-lg font-medium text-gray-900'>
               {document.title}
             </h3>
-            <p className='mt-1 text-sm text-gray-500 line-clamp-2'>
-              {document.description}
-            </p>
+            <div className='mt-2'>
+              <p className='text-sm text-gray-500 lg:break-words'>
+                {document.description}
+              </p>
+            </div>
           </div>
-          <div className='flex items-center space-x-3 self-end sm:self-start'>
+          <div className='flex items-start space-x-3 flex-shrink-0'>
             <span
               className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${getStatusColor(
                 document.status
