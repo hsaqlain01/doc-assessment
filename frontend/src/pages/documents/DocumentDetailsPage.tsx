@@ -1,10 +1,6 @@
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import BackArrow from 'src/assets/svg/backArrow';
-import { DocumentActions } from 'src/components/documents/DocumentActions';
 import { FilePreview } from 'src/components/documents/FilePreview';
-import { useAppSelector } from 'src/hooks/useRedux';
-import { RootState } from 'src/store/store';
-import { UserRole } from 'src/types/common.types';
 import { Document } from 'src/types/document.types';
 
 interface LocationState {
@@ -16,7 +12,7 @@ export const DocumentDetailsPage = () => {
   const location = useLocation();
 
   const { document } = location.state as LocationState;
-  const { user } = useAppSelector((state: RootState) => state.auth);
+
   // If no document in state, redirect to documents list
   if (!document) {
     return <Navigate to='/documents' replace />;
@@ -56,19 +52,15 @@ export const DocumentDetailsPage = () => {
           <div className='flex items-center space-x-4'>
             <span
               className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
-              ${
-                document.status === 'APPROVED'
+              ${document.status === 'APPROVED'
                   ? 'bg-green-100 text-green-800'
                   : document.status === 'REJECTED'
-                  ? 'bg-red-100 text-red-800'
-                  : 'bg-yellow-100 text-yellow-800'
-              }`}
+                    ? 'bg-red-100 text-red-800'
+                    : 'bg-yellow-100 text-yellow-800'
+                }`}
             >
               {document.status}
             </span>
-            {document.status === 'PENDING' && user?.role !== UserRole.USER && (
-              <DocumentActions document={document} />
-            )}
           </div>
         </div>
       </div>
@@ -145,13 +137,12 @@ export const DocumentDetailsPage = () => {
                 <div className='flex-shrink-0'>
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center
-                    ${
-                      document.status === 'APPROVED'
+                    ${document.status === 'APPROVED'
                         ? 'bg-green-100'
                         : document.status === 'REJECTED'
-                        ? 'bg-red-100'
-                        : 'bg-yellow-100'
-                    }`}
+                          ? 'bg-red-100'
+                          : 'bg-yellow-100'
+                      }`}
                   >
                     <span className='text-sm font-medium'>
                       {document.approver.user.name.charAt(0).toUpperCase()}

@@ -5,12 +5,14 @@ import { DocumentCard } from 'src/components/documents/DocumentCard';
 import { RootState } from 'src/store/store';
 import { Modal } from 'src/components/common/Modal';
 import { DocumentForm } from 'src/components/documents/DocumentForm';
+import { UserRole } from 'src/types/common.types';
 
 export const DocumentListPage = () => {
   const dispatch = useAppDispatch();
   const { documents, loading } = useAppSelector(
     (state: RootState) => state.document
   );
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -30,12 +32,14 @@ export const DocumentListPage = () => {
     <div className='p-4 md:p-6 max-w-7xl mx-auto'>
       <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
         <h1 className='text-xl md:text-2xl font-bold'>Documents</h1>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className='w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors'
-        >
-          Create Document
-        </button>
+        {
+          user?.role === UserRole.USER && <button
+            onClick={() => setShowCreateModal(true)}
+            className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700'
+          >
+            Create Document
+          </button>
+        }
       </div>
 
       <div className='grid gap-4'>

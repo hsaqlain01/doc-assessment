@@ -32,14 +32,6 @@ export const fetchDocuments = createAsyncThunk(
   }
 );
 
-export const fetchDocumentById = createAsyncThunk(
-  'document/fetchById',
-  async (id: string) => {
-    const response = await documentService.getDocumentById(id);
-    return response.data;
-  }
-);
-
 export const createDocument = createAsyncThunk(
   'document/create',
   async (formData: FormData) => {
@@ -102,20 +94,6 @@ const documentSlice = createSlice({
         state.error = action.error.message || 'Failed to fetch documents';
       })
 
-      // Fetch Document by ID
-      .addCase(fetchDocumentById.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchDocumentById.fulfilled, (state, action) => {
-        state.loading = false;
-        state.currentDocument = action.payload;
-      })
-      .addCase(fetchDocumentById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || 'Failed to fetch document';
-      })
-
       // Create Document
       .addCase(createDocument.pending, (state) => {
         state.isCreating = true;
@@ -130,29 +108,45 @@ const documentSlice = createSlice({
         state.error = action.error.message || 'Failed to create document';
       })
 
+      .addCase(approveDocument.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(approveDocument.fulfilled, (state, action) => {
-        const index = state.documents.findIndex(
-          (doc) => doc._id === action.payload._id
+        state.loading = false;
+        // Remove the approved document from the list
+        state.documents = state.documents.filter(
+          (doc) => doc._id !== action.payload._id
         );
-        if (index !== -1) {
-          state.documents[index] = action.payload;
-        }
+        // Update current document if it's the one being approved
         if (state.currentDocument?._id === action.payload._id) {
           state.currentDocument = action.payload;
         }
       })
+      .addCase(approveDocument.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to approve document';
+      })
 
       // Reject Document
+      .addCase(rejectDocument.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(rejectDocument.fulfilled, (state, action) => {
-        const index = state.documents.findIndex(
-          (doc) => doc._id === action.payload._id
+        state.loading = false;
+        // Remove the rejected document from the list
+        state.documents = state.documents.filter(
+          (doc) => doc._id !== action.payload._id
         );
-        if (index !== -1) {
-          state.documents[index] = action.payload;
-        }
+        // Update current document if it's the one being rejected
         if (state.currentDocument?._id === action.payload._id) {
           state.currentDocument = action.payload;
         }
+      })
+      .addCase(rejectDocument.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to reject document';
       })
 
       .addCase(fetchDocumentStats.fulfilled, (state, action) => {
