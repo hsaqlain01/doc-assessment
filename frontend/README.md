@@ -25,7 +25,7 @@ A React-based frontend for a document approval system that allows users to creat
 
 ## Prerequisites
 
-- Node.js (version 16 or later)
+- Node.js (version 18 or later)
 - npm or yarn
 - Backend API running (see backend README)
 
