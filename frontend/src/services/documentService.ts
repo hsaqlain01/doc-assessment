@@ -1,5 +1,5 @@
-import { Document } from "src/types/document.types";
-import api from "./api";
+import { Document, DocumentStats } from 'src/types/document.types';
+import api from './api';
 
 interface DocumentResponse {
   success: boolean;
@@ -19,15 +19,8 @@ interface DocumentsResponse {
   };
 }
 
-interface DocumentStats {
-  total: number;
-  pending: number;
-  approved: number;
-  rejected: number;
-}
-
 export const getAllDocuments = async () => {
-  const response = await api.get<DocumentsResponse>("/documents");
+  const response = await api.get<DocumentsResponse>('/documents');
   return response.data;
 };
 
@@ -37,8 +30,8 @@ export const getDocumentById = async (id: string) => {
 };
 
 export const createDocument = async (formData: FormData) => {
-  const response = await api.post<DocumentResponse>("/documents", formData, {
-    headers: { "Content-Type": "multipart/form-data" },
+  const response = await api.post<DocumentResponse>('/documents', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
   });
   return response.data;
 };
@@ -59,7 +52,7 @@ export const rejectDocument = async (id: string, comment: string) => {
 
 export const getDocumentStats = async () => {
   const response = await api.get<{ success: boolean; data: DocumentStats }>(
-    "/documents/stats"
+    '/documents/stats'
   );
   return response.data;
 };

@@ -1,14 +1,14 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { User } from "../models/User";
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { User } from '../models/User';
 import {
   IUser,
   RegisterUserDto,
   LoginUserDto,
   AuthResponse,
-} from "../types/user.types";
-import { AppError } from "../utils/errors";
-import { config } from "../config/env";
+} from '../types/user.types';
+import { AppError } from '../utils/errors';
+import { config } from '../config/env';
 
 export const register = async (
   userData: RegisterUserDto
@@ -16,7 +16,7 @@ export const register = async (
   const existingUser = await User.findOne({ email: userData.email });
 
   if (existingUser) {
-    throw new AppError("Email already registered", 400);
+    throw new AppError('Email already registered', 400);
   }
 
   const user = new User({
@@ -32,7 +32,7 @@ export const register = async (
 
   return {
     user: {
-      _id: user._id?.toString() || "",
+      _id: user._id?.toString() || '',
       name: user.name,
       email: user.email,
       role: user.role,
@@ -47,7 +47,7 @@ export const login = async (
   const user = await User.findOne({ email: credentials.email });
 
   if (!user) {
-    throw new AppError("Invalid credentials", 401);
+    throw new AppError('Invalid credentials', 401);
   }
 
   const isPasswordValid = await bcrypt.compare(
@@ -56,14 +56,14 @@ export const login = async (
   );
 
   if (!isPasswordValid) {
-    throw new AppError("Invalid credentials", 401);
+    throw new AppError('Invalid credentials', 401);
   }
 
   const token = generateToken(user);
 
   return {
     user: {
-      _id: user._id?.toString() || "",
+      _id: user._id?.toString() || '',
       name: user.name,
       email: user.email,
       role: user.role,
@@ -76,7 +76,7 @@ export const getUserById = async (userId: string): Promise<IUser> => {
   const user = await User.findById(userId);
 
   if (!user) {
-    throw new AppError("User not found", 404);
+    throw new AppError('User not found', 404);
   }
 
   return user;
@@ -92,7 +92,7 @@ export const updateUser = async (
   const user = await User.findById(userId);
 
   if (!user) {
-    throw new AppError("User not found", 404);
+    throw new AppError('User not found', 404);
   }
 
   // Update user fields
@@ -110,13 +110,13 @@ export const changePassword = async (
   const user = await User.findById(userId);
 
   if (!user) {
-    throw new AppError("User not found", 404);
+    throw new AppError('User not found', 404);
   }
 
   const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
 
   if (!isPasswordValid) {
-    throw new AppError("Current password is incorrect", 401);
+    throw new AppError('Current password is incorrect', 401);
   }
 
   user.password = newPassword;
@@ -124,7 +124,7 @@ export const changePassword = async (
 };
 
 export const getManagers = async (): Promise<IUser[]> => {
-  return User.find({ role: "MANAGER" }).select("_id name email");
+  return User.find({ role: 'MANAGER' }).select('_id name email');
 };
 
 const generateToken = (user: IUser): string => {

@@ -1,7 +1,7 @@
-import { Request, NextFunction, Response } from "express";
-import * as documentService from "../services/document.service";
-import { handleSuccess, handleError } from "../utils/response.handler";
-import { AuthRequest } from "../types/auth.types";
+import { Request, NextFunction, Response } from 'express';
+import * as documentService from '../services/document.service';
+import { handleSuccess, handleError } from '../utils/response.handler';
+import { AuthRequest } from '../types/auth.types';
 
 export const createDocument = async (
   req: AuthRequest,

@@ -1,18 +1,14 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as documentService from "../../services/documentService";
-import { Document } from "src/types/document.types";
-// import { Document } from '../../types';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import * as documentService from '../../services/documentService';
+import { Document, DocumentStats } from 'src/types/document.types';
+import { RootState } from '../store';
 
 interface DocumentState {
   documents: Document[];
   currentDocument: Document | null;
-  stats: {
-    total: number;
-    pending: number;
-    approved: number;
-    rejected: number;
-  } | null;
+  stats: DocumentStats | null;
   loading: boolean;
+  isFetchingStats: boolean;
   error: string | null;
   currentPage: number;
   totalPages: number;
@@ -23,21 +19,28 @@ const initialState: DocumentState = {
   currentDocument: null,
   stats: null,
   loading: false,
+  isFetchingStats: false,
   error: null,
   currentPage: 1,
   totalPages: 1,
 };
 
 export const fetchDocuments = createAsyncThunk(
-  "document/fetchAll",
+  'document/fetchAll',
   async () => {
     const response = await documentService.getAllDocuments();
     return response.data;
+  },
+  {
+    condition: (_, { getState }) => {
+      const state = getState() as RootState;
+      return !state.document.loading;
+    },
   }
 );
 
 export const fetchDocumentById = createAsyncThunk(
-  "document/fetchById",
+  'document/fetchById',
   async (id: string) => {
     const response = await documentService.getDocumentById(id);
     return response.data;
@@ -45,7 +48,7 @@ export const fetchDocumentById = createAsyncThunk(
 );
 
 export const createDocument = createAsyncThunk(
-  "document/create",
+  'document/create',
   async (formData: FormData) => {
     const response = await documentService.createDocument(formData);
     return response.data;
@@ -53,7 +56,7 @@ export const createDocument = createAsyncThunk(
 );
 
 export const approveDocument = createAsyncThunk(
-  "document/approve",
+  'document/approve',
   async ({ id, comment }: { id: string; comment: string }) => {
     const response = await documentService.approveDocument(id, comment);
     return response.data;
@@ -61,7 +64,7 @@ export const approveDocument = createAsyncThunk(
 );
 
 export const rejectDocument = createAsyncThunk(
-  "document/reject",
+  'document/reject',
   async ({ id, comment }: { id: string; comment: string }) => {
     const response = await documentService.rejectDocument(id, comment);
     return response.data;
@@ -69,15 +72,21 @@ export const rejectDocument = createAsyncThunk(
 );
 
 export const fetchDocumentStats = createAsyncThunk(
-  "document/fetchStats",
+  'document/fetchStats',
   async () => {
     const response = await documentService.getDocumentStats();
     return response.data;
+  },
+  {
+    condition: (_, { getState }) => {
+      const state = getState() as RootState;
+      return !state.document.isFetchingStats;
+    },
   }
 );
 
 const documentSlice = createSlice({
-  name: "document",
+  name: 'document',
   initialState,
   reducers: {
     clearError: (state) => {
@@ -103,7 +112,7 @@ const documentSlice = createSlice({
       })
       .addCase(fetchDocuments.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to fetch documents";
+        state.error = action.error.message || 'Failed to fetch documents';
       })
 
       // Fetch Document by ID
@@ -117,7 +126,7 @@ const documentSlice = createSlice({
       })
       .addCase(fetchDocumentById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to fetch document";
+        state.error = action.error.message || 'Failed to fetch document';
       })
 
       // Create Document
@@ -131,10 +140,9 @@ const documentSlice = createSlice({
       })
       .addCase(createDocument.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to create document";
+        state.error = action.error.message || 'Failed to create document';
       })
 
-      // Approve Document
       .addCase(approveDocument.fulfilled, (state, action) => {
         const index = state.documents.findIndex(
           (doc) => doc._id === action.payload._id
@@ -161,8 +169,15 @@ const documentSlice = createSlice({
       })
 
       // Fetch Stats
+      .addCase(fetchDocumentStats.pending, (state) => {
+        state.isFetchingStats = true;
+      })
       .addCase(fetchDocumentStats.fulfilled, (state, action) => {
         state.stats = action.payload;
+        state.isFetchingStats = false;
+      })
+      .addCase(fetchDocumentStats.rejected, (state) => {
+        state.isFetchingStats = false;
       });
   },
 });

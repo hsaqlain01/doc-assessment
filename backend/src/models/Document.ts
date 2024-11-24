@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import { DocumentStatus } from "../types/common.types";
-import { IDocument } from "../types/document.types";
+import mongoose from 'mongoose';
+import { DocumentStatus } from '../types/common.types';
+import { IDocument } from '../types/document.types';
 // import { IDocument } from "../types/document.types";
 
 const documentSchema = new mongoose.Schema(
@@ -16,7 +16,7 @@ const documentSchema = new mongoose.Schema(
     },
     submittedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     status: {
@@ -27,7 +27,7 @@ const documentSchema = new mongoose.Schema(
     approver: {
       user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
       },
       status: {
         type: String,
@@ -52,4 +52,4 @@ const documentSchema = new mongoose.Schema(
   }
 );
 
-export const Document = mongoose.model<IDocument>("Document", documentSchema);
+export const Document = mongoose.model<IDocument>('Document', documentSchema);

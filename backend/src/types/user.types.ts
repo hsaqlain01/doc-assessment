@@ -1,5 +1,5 @@
-import { Document } from "mongoose";
-import { UserRole } from "./common.types";
+import { Document } from 'mongoose';
+import { UserRole } from './common.types';
 
 export interface IUser extends Document {
   _id: string;

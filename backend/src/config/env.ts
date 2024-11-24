@@ -1,9 +1,9 @@
-import dotenv from "dotenv";
-import { AppError } from "../utils/errors";
+import dotenv from 'dotenv';
+import { AppError } from '../utils/errors';
 
 dotenv.config();
 
-const requiredEnvVars = ["MONGODB_URI", "JWT_SECRET", "PORT"] as const;
+const requiredEnvVars = ['MONGODB_URI', 'JWT_SECRET', 'PORT'] as const;
 
 requiredEnvVars.forEach((var_) => {
   if (!process.env[var_]) {
@@ -17,16 +17,16 @@ export const config = {
   },
   jwt: {
     secret: process.env.JWT_SECRET!,
-    expiresIn: process.env.JWT_EXPIRES_IN || "1d",
+    expiresIn: process.env.JWT_EXPIRES_IN || '1d',
   },
   app: {
     port: parseInt(process.env.PORT!) || 4000,
-    env: process.env.NODE_ENV || "development",
+    env: process.env.NODE_ENV || 'development',
   },
   uploads: {
     maxSize: parseInt(process.env.MAX_FILE_SIZE!) || 5 * 1024 * 1024, // 5MB
     allowedTypes: (
-      process.env.ALLOWED_FILE_TYPES || "application/pdf,image/jpeg,image/png"
-    ).split(","),
+      process.env.ALLOWED_FILE_TYPES || 'application/pdf,image/jpeg,image/png'
+    ).split(','),
   },
 } as const;

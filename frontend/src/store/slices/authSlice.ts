@@ -1,67 +1,79 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as authService from "../../services/authService";
-import { User, LoginCredentials, RegisterData } from "../../types/auth.types";
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import * as authService from '../../services/authService';
+import {
+  User,
+  LoginCredentials,
+  RegisterData,
+  AuthResponse,
+} from '../../types/auth.types';
+import { handleApiError } from 'src/utils/error-handler';
 
 interface AuthState {
   user: User | null;
-  token: string | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
-  token: localStorage.getItem("token"),
   loading: false,
   error: null,
 };
 
+const onLogout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+};
+
+const storeUser = (response: AuthResponse) => {
+  localStorage.setItem('token', response.token);
+  localStorage.setItem('user', JSON.stringify(response.user));
+};
+
 export const login = createAsyncThunk(
-  "auth/login",
-  async (credentials: LoginCredentials) => {
-    const response = await authService.login(credentials);
-    console.log("response       ", response);
-    localStorage.setItem("token", response.token);
-    return response;
+  'auth/login',
+  async (credentials: LoginCredentials, { rejectWithValue }) => {
+    try {
+      const response = await authService.login(credentials);
+      storeUser(response);
+
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(handleApiError(error, `Login failed`));
+    }
   }
 );
 
 export const register = createAsyncThunk(
-  "auth/register",
-  async (data: RegisterData) => {
-    const response = await authService.register(data);
-    localStorage.setItem("token", response.token);
-    return response;
+  'auth/register',
+  async (data: RegisterData, { rejectWithValue }) => {
+    try {
+      const response = await authService.register(data);
+      storeUser(response);
+
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(handleApiError(error, `Login failed`));
+    }
   }
 );
 
-// export const getProfile = createAsyncThunk(
-//   'auth/getProfile',
-//   async () => {
-//     const response = await authService.getProfile();
-//     return response;
-//   }
-// );
-
-// export const updateProfile = createAsyncThunk(
-//   'auth/updateProfile',
-//   async (data: { name: string; email: string }) => {
-//     const response = await authService.updateProfile(data);
-//     return response;
-//   }
-// );
-
 const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState,
   reducers: {
     logout: (state) => {
       state.user = null;
-      state.token = null;
-      localStorage.removeItem("token");
+      onLogout();
     },
     clearError: (state) => {
       state.error = null;
+    },
+    initializeAuth: (state) => {
+      const user = localStorage.getItem('user');
+      if (user) {
+        state.user = JSON.parse(user);
+      }
     },
   },
   extraReducers: (builder) => {
@@ -74,11 +86,10 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
-        state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Login failed";
+        state.error = action.error.message || 'Login failed';
       })
       // Register
       .addCase(register.pending, (state) => {
@@ -88,18 +99,13 @@ const authSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
-        state.token = action.payload.token;
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Registration failed";
+        state.error = action.error.message || 'Registration failed';
       });
-    // Get Profile
-    //   .addCase(getProfile.fulfilled, (state, action) => {
-    //     state.user = action.payload.user;
-    //   });
   },
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { logout, clearError, initializeAuth } = authSlice.actions;
 export default authSlice.reducer;

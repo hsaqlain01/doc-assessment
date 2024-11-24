@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
 interface HomeController {
   getHome(req: Request, res: Response): void;
@@ -6,7 +6,7 @@ interface HomeController {
 
 const homeController: HomeController = {
   getHome: (req: Request, res: Response): void => {
-    res.send("Welcome!");
+    res.send('Welcome!');
   },
 };
 

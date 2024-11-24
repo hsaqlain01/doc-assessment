@@ -1,15 +1,15 @@
 // src/services/document.service.ts
-import { Document } from "../models/Document";
-import { AppError } from "../utils/errors";
+import { Document } from '../models/Document';
+import { AppError } from '../utils/errors';
 import {
   DocumentQueryParams,
   CreateDocumentDto,
   UpdateDocumentDto,
   IDocument,
-} from "../types/document.types";
-import { DocumentStatus, UserRole } from "../types/common.types";
-import { IUser } from "../types/user.types";
-import { User } from "../models/User";
+} from '../types/document.types';
+import { DocumentStatus, UserRole } from '../types/common.types';
+import { IUser } from '../types/user.types';
+import { User } from '../models/User';
 
 export const createDocument = async (
   data: CreateDocumentDto,
@@ -55,7 +55,7 @@ export const getDocuments = async (
   }
 
   // If user is not admin, show only their documents or documents they need to approve
-  if (user.role !== "ADMIN") {
+  if (user.role !== 'ADMIN') {
     query.$or = [{ submittedBy: user._id }, { status: DocumentStatus.PENDING }];
   }
 
@@ -63,8 +63,8 @@ export const getDocuments = async (
 
   const [documents, total] = await Promise.all([
     Document.find(query)
-      .populate("submittedBy", "name email")
-      .populate("approver.user", "name email")
+      .populate('submittedBy', 'name email')
+      .populate('approver.user', 'name email')
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 }),
@@ -92,11 +92,11 @@ export const approveDocument = async (
   });
 
   if (!document) {
-    throw new AppError("Document not found", 404);
+    throw new AppError('Document not found', 404);
   }
 
   if (document.status !== DocumentStatus.PENDING) {
-    throw new AppError("Document is not in pending status", 400);
+    throw new AppError('Document is not in pending status', 400);
   }
 
   await _validateDocument(userId);
@@ -121,7 +121,7 @@ export const rejectDocument = async (
   });
 
   if (!document) {
-    throw new AppError("Document not found.", 404);
+    throw new AppError('Document not found.', 404);
   }
 
   await _validateDocument(userId);
@@ -147,12 +147,12 @@ export const updateDocument = async (
   });
 
   if (!document) {
-    throw new AppError("Document not found or access denied", 404);
+    throw new AppError('Document not found or access denied', 404);
   }
 
   if (document.status !== DocumentStatus.PENDING) {
     throw new AppError(
-      "Cannot update document that is not in PENDING status",
+      'Cannot update document that is not in PENDING status',
       400
     );
   }
@@ -177,7 +177,7 @@ export const getDocumentStats = async (userId: string) => {
     pending,
     approved,
     rejected,
-    approvalRate: total ? ((approved / total) * 100).toFixed(2) : "0",
+    approvalRate: total ? ((approved / total) * 100).toFixed(2) : '0',
   };
 };
 
@@ -185,10 +185,10 @@ const _validateDocument = async (userId: string) => {
   const user = await User.findById(userId);
 
   if (!user) {
-    throw new AppError("User not found", 404);
+    throw new AppError('User not found', 404);
   }
 
   if (user.role !== UserRole.MANAGER) {
-    throw new AppError("Only managers can approve or reject documents", 403);
+    throw new AppError('Only managers can approve or reject documents', 403);
   }
 };

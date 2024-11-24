@@ -4,16 +4,16 @@ import { useAppDispatch } from 'src/hooks/useRedux';
 import { fetchDocumentStats } from 'src/store/slices/documentSlice';
 
 export const DashboardPage = () => {
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        dispatch(fetchDocumentStats());
-    }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchDocumentStats());
+  }, []);
 
-    return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-            <DocumentStats />
-        </div>
-    );
+  return (
+    <div className='p-6'>
+      <h1 className='text-2xl font-bold mb-6'>Dashboard</h1>
+      <DocumentStats />
+    </div>
+  );
 };

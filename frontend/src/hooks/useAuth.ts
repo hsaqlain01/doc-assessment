@@ -1,14 +1,13 @@
-import { useNavigate, useLocation } from "react-router-dom";
-import { useAppDispatch } from "./useAppDispatch";
-import { useAppSelector } from "./useAppSelector";
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   login as loginAction,
   logout as logoutAction,
   register as registerAction,
-} from "src/store/slices/authSlice";
-import { toast } from "src/components/ui/Toast";
-import { RootState } from "src/store/store";
-import { LoginCredentials, RegisterData } from "src/types/auth.types";
+} from 'src/store/slices/authSlice';
+import { toast } from 'src/components/ui/Toast';
+import { RootState } from 'src/store/store';
+import { LoginCredentials, RegisterData } from 'src/types/auth.types';
+import { useAppDispatch, useAppSelector } from './useRedux';
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
@@ -19,17 +18,17 @@ export const useAuth = () => {
   const login = async (credentials: LoginCredentials) => {
     try {
       await dispatch(loginAction(credentials)).unwrap();
-      const from = (location.state as any)?.from?.pathname || "/dashboard";
+      const from = (location.state as any)?.from?.pathname || '/dashboard';
       navigate(from, { replace: true });
       toast({
-        title: "Welcome back!",
-        variant: "success",
+        title: 'Welcome back!',
+        variant: 'success',
       });
     } catch (error: any) {
       toast({
-        title: "Login failed",
+        title: 'Login failed',
         description: error.message,
-        variant: "error",
+        variant: 'error',
       });
       throw error;
     }
@@ -40,28 +39,28 @@ export const useAuth = () => {
       await dispatch(registerAction(data)).unwrap();
     } catch (error: any) {
       toast({
-        title: "Registration failed",
+        title: 'Registration failed',
         description: error.message,
-        variant: "error",
+        variant: 'error',
       });
     }
   };
 
   const logout = async () => {
-    // try {
-    //   await dispatch(logoutAction()).unwrap();
-    //   navigate("/login");
-    //   toast({
-    //     title: "Logged out successfully",
-    //     variant: "success",
-    //   });
-    // } catch (error: any) {
-    //   toast({
-    //     title: "Logout failed",
-    //     description: error.message,
-    //     variant: "error",
-    //   });
-    // }
+    try {
+      dispatch(logoutAction());
+      navigate('/login');
+      toast({
+        title: 'Logged out successfully',
+        variant: 'success',
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Logout failed',
+        description: error.message,
+        variant: 'error',
+      });
+    }
   };
 
   return {

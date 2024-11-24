@@ -1,6 +1,6 @@
 // src/utils/response.handler.ts
-import { Response } from "express";
-import { AppError } from "./errors";
+import { Response } from 'express';
+import { AppError } from './errors';
 
 export const handleSuccess = (
   res: Response,
@@ -24,12 +24,12 @@ export const handleError = (res: Response, error: unknown) => {
     });
   }
 
-  console.error("Unhandled error:", error);
+  console.error('Unhandled error:', error);
   res.status(500).json({
     success: false,
     error: {
-      message: "Internal server error",
-      ...(process.env.NODE_ENV === "development" && {
+      message: 'Internal server error',
+      ...(process.env.NODE_ENV === 'development' && {
         details: error instanceof Error ? error.message : String(error),
       }),
     },

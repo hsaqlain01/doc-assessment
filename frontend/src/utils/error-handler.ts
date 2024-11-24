@@ -1,23 +1,16 @@
-import { toast } from "src/components/ui/Toast";
-import { AxiosError } from "axios";
+interface ApiError {
+  message: string;
+  code?: string;
+  additionalInfo?: any;
+}
 
-export const handleApiError = (error: unknown) => {
-  if (error instanceof AxiosError) {
-    const message = error.response?.data?.message || error.message;
-    toast({
-      title: "Error",
-      description: message,
-      variant: "error",
-    });
-    return message;
-  }
-
-  const message =
-    error instanceof Error ? error.message : "An unexpected error occurred";
-  toast({
-    title: "Error",
-    description: message,
-    variant: "error",
-  });
-  return message;
+export const handleApiError = (
+  error: any,
+  defaultMessage: string
+): ApiError => {
+  return {
+    message: error.response?.data?.error?.message || defaultMessage,
+    code: error.response?.data?.error?.code,
+    additionalInfo: error.response?.data?.error?.additionalInfo,
+  };
 };

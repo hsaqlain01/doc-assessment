@@ -1,5 +1,5 @@
-import Joi from "joi";
-import { DocumentStatus, UserRole } from "../types/common.types";
+import Joi from 'joi';
+import { DocumentStatus, UserRole } from '../types/common.types';
 
 export const userSchemas = {
   register: Joi.object({
@@ -33,7 +33,7 @@ export const documentSchemas = {
   query: Joi.object({
     status: Joi.string().valid(...Object.values(DocumentStatus)),
     startDate: Joi.date().iso(),
-    endDate: Joi.date().iso().min(Joi.ref("startDate")),
+    endDate: Joi.date().iso().min(Joi.ref('startDate')),
     page: Joi.number().integer().min(1).default(1),
     limit: Joi.number().integer().min(1).max(100).default(10),
   }),

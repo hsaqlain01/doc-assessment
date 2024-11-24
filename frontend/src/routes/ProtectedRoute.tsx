@@ -1,30 +1,29 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAppSelector } from 'src/hooks/useRedux';
-// import { useAppSelector } from 'src/hooks/useAppSelector';
-// import { useAppSelector } from 'src/hooks/redux';
-import { RootState } from 'src/store/store';
-import { UserRole } from 'src/types/common.types';
-// import { UserRole } from 'src/types/auth.types';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 interface ProtectedRouteProps {
-    children: React.ReactNode;
-    allowedRoles?: UserRole[];
+  authRequired?: boolean;
 }
 
 export const ProtectedRoute = ({
-    children,
-    allowedRoles,
+  authRequired = true,
 }: ProtectedRouteProps) => {
-    const { user, token } = useAppSelector((state: RootState) => state.auth);
-    const location = useLocation();
+  const token = localStorage.getItem('token');
+  const isAuthenticated = !!token;
+  const location = useLocation();
 
-    if (!token || !user) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+  // For routes that require authentication
+  if (authRequired) {
+    if (!isAuthenticated) {
+      // Redirect to login with the attempted location
+      return <Navigate to='/login' state={{ from: location }} replace />;
     }
+    return <Outlet />;
+  }
 
-    if (allowedRoles && !allowedRoles.includes(user.role as UserRole)) {
-        return <Navigate to="/unauthorized" replace />;
-    }
+  // For public routes (login, register)
+  if (isAuthenticated && location.pathname === '/login') {
+    return <Navigate to='/dashboard' replace />;
+  }
 
-    return <>{children}</>;
+  return <Outlet />;
 };

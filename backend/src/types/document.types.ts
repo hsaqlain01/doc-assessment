@@ -1,6 +1,6 @@
-import { Document } from "mongoose";
-import { DocumentStatus, UserRole } from "./common.types";
-import { IUser } from "./user.types";
+import { Document } from 'mongoose';
+import { DocumentStatus } from './common.types';
+import { IUser } from './user.types';
 
 export interface IDocument extends Document {
   _id: string;

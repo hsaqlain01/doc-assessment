@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { AppError } from "../utils/errors";
-import { config } from "../config/env";
-import { ErrorRequestHandler } from "../types/error.types";
+import { Request, Response, NextFunction } from 'express';
+import { AppError } from '../utils/errors';
+import { config } from '../config/env';
+import { ErrorRequestHandler } from '../types/error.types';
 
 export const errorHandler: ErrorRequestHandler = (
   error: Error,
@@ -9,7 +9,7 @@ export const errorHandler: ErrorRequestHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.error("Error:", error);
+  console.error('Error:', error);
 
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({
@@ -22,22 +22,22 @@ export const errorHandler: ErrorRequestHandler = (
   }
 
   // Mongoose validation error
-  if (error.name === "ValidationError") {
+  if (error.name === 'ValidationError') {
     return res.status(400).json({
       success: false,
       error: {
-        message: "Validation Error",
+        message: 'Validation Error',
         details: error.message,
       },
     });
   }
 
   // JWT error
-  if (error.name === "JsonWebTokenError") {
+  if (error.name === 'JsonWebTokenError') {
     return res.status(401).json({
       success: false,
       error: {
-        message: "Invalid token",
+        message: 'Invalid token',
       },
     });
   }
@@ -46,8 +46,8 @@ export const errorHandler: ErrorRequestHandler = (
   return res.status(500).json({
     success: false,
     error: {
-      message: "Internal Server Error",
-      ...(config.app.env === "development" && { stack: error.stack }),
+      message: 'Internal Server Error',
+      ...(config.app.env === 'development' && { stack: error.stack }),
     },
   });
 };

@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import Joi from "joi";
-import { AppError } from "../utils/errors";
+import { Request, Response, NextFunction } from 'express';
+import Joi from 'joi';
+import { AppError } from '../utils/errors';
 
 export const validateBody = (schema: Joi.ObjectSchema) => {
   return (req: Request, _res: Response, next: NextFunction) => {
@@ -11,10 +11,10 @@ export const validateBody = (schema: Joi.ObjectSchema) => {
 
     if (error) {
       const details = error.details.map((detail) => ({
-        field: detail.path.join("."),
+        field: detail.path.join('.'),
         message: detail.message,
       }));
-      throw new AppError("Validation failed", 400, details);
+      throw new AppError('Validation failed', 400, details);
     }
 
     req.body = value;
@@ -31,10 +31,10 @@ export const validateQuery = (schema: Joi.ObjectSchema) => {
 
     if (error) {
       const details = error.details.map((detail) => ({
-        field: detail.path.join("."),
+        field: detail.path.join('.'),
         message: detail.message,
       }));
-      throw new AppError("Invalid query parameters", 400, details);
+      throw new AppError('Invalid query parameters', 400, details);
     }
 
     req.query = value;
