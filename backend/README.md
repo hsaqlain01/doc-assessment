@@ -91,6 +91,13 @@ src/
 
 ### Authentication
 
+### MANAGER Credentials
+
+email: manager@gmail.com
+password: 123456@aA
+
+**Note:** Any user registered through the front end will automatically be assigned the role of 'user'.
+
 ```
 POST /api/auth/register - Register new user
 POST /api/auth/login    - Login user
