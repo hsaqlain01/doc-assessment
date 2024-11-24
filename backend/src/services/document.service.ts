@@ -14,8 +14,8 @@ import { User } from '../models/User';
 export const createDocument = async (
   data: CreateDocumentDto,
   files: Express.Multer.File[],
-  userId: string
-): Promise<IDocument> => {
+  user: IUser
+) => {
   const attachments =
     files?.map((file) => ({
       filename: file.filename,
@@ -27,7 +27,7 @@ export const createDocument = async (
 
   const document = new Document({
     ...data,
-    submittedBy: userId,
+    submittedBy: user._id,
     status: DocumentStatus.PENDING,
     attachments,
   });
@@ -55,8 +55,10 @@ export const getDocuments = async (
   }
 
   // If user is not admin, show only their documents or documents they need to approve
-  if (user.role !== 'ADMIN') {
+  if (user.role === UserRole.MANAGER) {
     query.$or = [{ submittedBy: user._id }, { status: DocumentStatus.PENDING }];
+  } else if (user.role === UserRole.USER) {
+    query.$or = [{ submittedBy: user._id }];
   }
 
   const skip = (page - 1) * limit;

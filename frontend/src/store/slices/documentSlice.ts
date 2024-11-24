@@ -8,7 +8,6 @@ interface DocumentState {
   currentDocument: Document | null;
   stats: DocumentStats | null;
   loading: boolean;
-  isFetchingStats: boolean;
   error: string | null;
   currentPage: number;
   totalPages: number;
@@ -19,7 +18,6 @@ const initialState: DocumentState = {
   currentDocument: null,
   stats: null,
   loading: false,
-  isFetchingStats: false,
   error: null,
   currentPage: 1,
   totalPages: 1,
@@ -30,12 +28,6 @@ export const fetchDocuments = createAsyncThunk(
   async () => {
     const response = await documentService.getAllDocuments();
     return response.data;
-  },
-  {
-    condition: (_, { getState }) => {
-      const state = getState() as RootState;
-      return !state.document.loading;
-    },
   }
 );
 
@@ -76,12 +68,6 @@ export const fetchDocumentStats = createAsyncThunk(
   async () => {
     const response = await documentService.getDocumentStats();
     return response.data;
-  },
-  {
-    condition: (_, { getState }) => {
-      const state = getState() as RootState;
-      return !state.document.isFetchingStats;
-    },
   }
 );
 
@@ -168,16 +154,8 @@ const documentSlice = createSlice({
         }
       })
 
-      // Fetch Stats
-      .addCase(fetchDocumentStats.pending, (state) => {
-        state.isFetchingStats = true;
-      })
       .addCase(fetchDocumentStats.fulfilled, (state, action) => {
         state.stats = action.payload;
-        state.isFetchingStats = false;
-      })
-      .addCase(fetchDocumentStats.rejected, (state) => {
-        state.isFetchingStats = false;
       });
   },
 });

@@ -6,7 +6,7 @@ export interface IDocument extends Document {
   _id: string;
   title: string;
   description: string;
-  submittedBy: string | IUser;
+  submittedBy: IUser;
   status: DocumentStatus;
   approver: IApprover;
   file?: string;
@@ -47,22 +47,4 @@ export interface IAttachment {
   size: number;
   mimeType: string;
   path: string;
-}
-
-export interface IApprover {
-  user: string | IUser;
-  status: DocumentStatus;
-  comment?: string;
-  timestamp: Date;
-}
-
-export interface IDocument extends Document {
-  title: string;
-  description: string;
-  submittedBy: string | IUser;
-  status: DocumentStatus;
-  approvers: IApprover[];
-  attachments: IAttachment[];
-  createdAt: Date;
-  updatedAt: Date;
 }

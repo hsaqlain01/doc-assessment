@@ -3,19 +3,16 @@ import * as documentService from '../services/document.service';
 import { handleSuccess, handleError } from '../utils/response.handler';
 import { AuthRequest } from '../types/auth.types';
 
-export const createDocument = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const createDocument = async (req: AuthRequest, res: Response) => {
   try {
     const files = req.files as Express.Multer.File[];
     const document = await documentService.createDocument(
       req.body,
       files,
-      req.user!._id
+      req.user!
     );
-    handleSuccess(res, document, 201);
+    const response = JSON.parse(JSON.stringify(document));
+    handleSuccess(res, { ...response, submittedBy: req.user }, 201);
   } catch (error) {
     handleError(res, error);
   }

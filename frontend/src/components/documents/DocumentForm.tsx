@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAppDispatch } from 'src/hooks/useRedux';
 import { createDocument } from 'src/store/slices/documentSlice';
+import { FormInput } from '../common/FormInput';
 
 interface DocumentFormData {
   title: string;
@@ -40,15 +41,20 @@ export const DocumentForm = ({ onClose }: { onClose: () => void }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
       <div>
-        <label className='block text-sm font-medium text-gray-700'>Title</label>
-        <input
+        <FormInput
+          id='title'
           type='text'
-          {...register('title', { required: 'Title is required' })}
-          className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
+          label='Title'
+          register={register}
+          rules={{
+            required: 'Title is required',
+            minLength: {
+              value: 3,
+              message: 'Title must be at least 3 characters long',
+            },
+          }}
+          error={errors.title}
         />
-        {errors.title && (
-          <p className='mt-1 text-sm text-red-600'>{errors.title.message}</p>
-        )}
       </div>
 
       <div>
@@ -56,7 +62,13 @@ export const DocumentForm = ({ onClose }: { onClose: () => void }) => {
           Description
         </label>
         <textarea
-          {...register('description', { required: 'Description is required' })}
+          {...register('description', {
+            required: 'Description is required',
+            minLength: {
+              value: 10,
+              message: 'Title must be at least 10 characters long',
+            },
+          })}
           rows={4}
           className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
         />
