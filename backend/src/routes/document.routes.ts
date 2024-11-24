@@ -46,13 +46,6 @@ router.get(
 );
 
 router.put(
-  '/:id',
-  auth,
-  validateBody(documentSchemas.update),
-  documentController.updateDocument
-);
-
-router.put(
   '/:id/approve',
   auth,
   validateBody(documentSchemas.approval),

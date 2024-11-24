@@ -18,7 +18,7 @@ export const DocumentListPage = () => {
     dispatch(fetchDocuments());
   }, [dispatch]);
 
-  if (loading) {
+  if (loading && !documents?.length) {
     return <div>Loading...</div>;
   }
 

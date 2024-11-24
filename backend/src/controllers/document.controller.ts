@@ -1,4 +1,4 @@
-import { Request, NextFunction, Response } from 'express';
+import { Response } from 'express';
 import * as documentService from '../services/document.service';
 import { handleSuccess, handleError } from '../utils/response.handler';
 import { AuthRequest } from '../types/auth.types';
@@ -18,11 +18,7 @@ export const createDocument = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const getDocuments = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const getDocuments = async (req: AuthRequest, res: Response) => {
   try {
     const result = await documentService.getDocuments(req.user!, req.query);
     handleSuccess(res, result);
@@ -31,28 +27,7 @@ export const getDocuments = async (
   }
 };
 
-export const updateDocument = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const document = await documentService.updateDocument(
-      req.params.id,
-      req.user!._id,
-      req.body
-    );
-    handleSuccess(res, document);
-  } catch (error) {
-    handleError(res, error);
-  }
-};
-
-export const approveDocument = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const approveDocument = async (req: AuthRequest, res: Response) => {
   try {
     const document = await documentService.approveDocument(
       req.params.id,
@@ -65,11 +40,7 @@ export const approveDocument = async (
   }
 };
 
-export const rejectDocument = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const rejectDocument = async (req: AuthRequest, res: Response) => {
   try {
     const document = await documentService.rejectDocument(
       req.params.id,
@@ -82,11 +53,7 @@ export const rejectDocument = async (
   }
 };
 
-export const getDocumentStats = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) => {
+export const getDocumentStats = async (req: AuthRequest, res: Response) => {
   try {
     const stats = await documentService.getDocumentStats(req.user!._id);
     handleSuccess(res, stats);

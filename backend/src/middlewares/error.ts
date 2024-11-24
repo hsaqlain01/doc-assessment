@@ -9,8 +9,6 @@ export const errorHandler: ErrorRequestHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.error('Error:', error);
-
   if (error instanceof AppError) {
     return res.status(error.statusCode).json({
       success: false,

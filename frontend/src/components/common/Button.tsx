@@ -6,7 +6,7 @@ interface LoadingButtonProps
   children: React.ReactNode;
 }
 
-export const LoadingButton = ({
+export const Button = ({
   loading,
   children,
   className,

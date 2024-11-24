@@ -1,8 +1,9 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAppDispatch } from 'src/hooks/useRedux';
 import { createDocument } from 'src/store/slices/documentSlice';
 import { FormInput } from '../common/FormInput';
+import { useSelector } from 'react-redux';
+import { RootState } from 'src/store/store';
 
 interface DocumentFormData {
   title: string;
@@ -11,7 +12,7 @@ interface DocumentFormData {
 }
 
 export const DocumentForm = ({ onClose }: { onClose: () => void }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { isCreating } = useSelector((state: RootState) => state.document);
   const dispatch = useAppDispatch();
   const {
     register,
@@ -20,23 +21,18 @@ export const DocumentForm = ({ onClose }: { onClose: () => void }) => {
   } = useForm<DocumentFormData>();
 
   const onSubmit = async (data: DocumentFormData) => {
-    try {
-      setIsSubmitting(true);
-      const formData = new FormData();
-      formData.append('title', data.title);
-      formData.append('description', data.description);
+    const formData = new FormData();
+    formData.append('title', data.title);
+    formData.append('description', data.description);
 
-      if (data.attachments) {
-        Array.from(data.attachments).forEach((file) => {
-          formData.append('attachments', file);
-        });
-      }
-
-      await dispatch(createDocument(formData)).unwrap();
-      onClose();
-    } finally {
-      setIsSubmitting(false);
+    if (data.attachments) {
+      Array.from(data.attachments).forEach((file) => {
+        formData.append('attachments', file);
+      });
     }
+
+    await dispatch(createDocument(formData)).unwrap();
+    onClose();
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
@@ -102,10 +98,10 @@ export const DocumentForm = ({ onClose }: { onClose: () => void }) => {
         </button>
         <button
           type='submit'
-          disabled={isSubmitting}
+          disabled={isCreating}
           className='px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50'
         >
-          {isSubmitting ? 'Creating...' : 'Create Document'}
+          {isCreating ? 'Creating...' : 'Create Document'}
         </button>
       </div>
     </form>

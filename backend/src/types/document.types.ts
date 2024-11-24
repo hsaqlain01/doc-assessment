@@ -27,16 +27,8 @@ export interface CreateDocumentDto {
   approvers?: string[];
 }
 
-export interface UpdateDocumentDto {
-  title?: string;
-  description?: string;
-  approvers?: string[];
-}
-
 export interface DocumentQueryParams {
   status?: DocumentStatus;
-  startDate?: Date;
-  endDate?: Date;
   page?: number;
   limit?: number;
 }

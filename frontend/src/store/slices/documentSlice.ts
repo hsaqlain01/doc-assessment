@@ -1,13 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import * as documentService from '../../services/documentService';
 import { Document, DocumentStats } from 'src/types/document.types';
-import { RootState } from '../store';
 
 interface DocumentState {
   documents: Document[];
   currentDocument: Document | null;
   stats: DocumentStats | null;
   loading: boolean;
+  isCreating: boolean;
   error: string | null;
   currentPage: number;
   totalPages: number;
@@ -19,6 +19,7 @@ const initialState: DocumentState = {
   stats: null,
   loading: false,
   error: null,
+  isCreating: false,
   currentPage: 1,
   totalPages: 1,
 };
@@ -117,15 +118,15 @@ const documentSlice = createSlice({
 
       // Create Document
       .addCase(createDocument.pending, (state) => {
-        state.loading = true;
+        state.isCreating = true;
         state.error = null;
       })
       .addCase(createDocument.fulfilled, (state, action) => {
-        state.loading = false;
+        state.isCreating = false;
         state.documents.unshift(action.payload);
       })
       .addCase(createDocument.rejected, (state, action) => {
-        state.loading = false;
+        state.isCreating = false;
         state.error = action.error.message || 'Failed to create document';
       })
 

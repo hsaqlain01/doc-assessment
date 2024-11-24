@@ -24,7 +24,6 @@ export const handleError = (res: Response, error: unknown) => {
     });
   }
 
-  console.error('Unhandled error:', error);
   res.status(500).json({
     success: false,
     error: {

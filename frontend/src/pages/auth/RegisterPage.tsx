@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useAppDispatch, useAppSelector } from 'src/hooks/useRedux';
 import { register as registerUser } from 'src/store/slices/authSlice';
-import { LoadingButton } from 'src/components/common/LoadingButton';
+import { Button } from 'src/components/common/Button';
 import { RegisterData } from 'src/types/auth.types';
 import { RootState } from 'src/store/store';
 import { FormInput } from 'src/components/common/FormInput';
@@ -108,9 +108,9 @@ export const RegisterPage = () => {
           </div>
 
           <div>
-            <LoadingButton type='submit' loading={loading}>
+            <Button type='submit' loading={loading}>
               Create Account
-            </LoadingButton>
+            </Button>
           </div>
         </form>
       </div>

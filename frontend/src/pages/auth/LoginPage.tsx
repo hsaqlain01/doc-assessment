@@ -6,7 +6,7 @@ import { LoginCredentials } from 'src/types/auth.types';
 import { toast } from 'react-hot-toast';
 import { FormInput } from 'src/components/common/FormInput';
 import { loginValidations } from './utils/validations';
-import { LoadingButton } from 'src/components/common/LoadingButton';
+import { Button } from 'src/components/common/Button';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -57,9 +57,9 @@ export const LoginPage = () => {
           />
 
           <div>
-            <LoadingButton type='submit' loading={loading}>
+            <Button type='submit' loading={loading}>
               Login
-            </LoadingButton>
+            </Button>
           </div>
         </form>
 
