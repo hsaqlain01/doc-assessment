@@ -1,8 +1,7 @@
 import { useForm } from 'react-hook-form';
-import { useAppDispatch } from 'src/hooks/useRedux';
+import { useAppDispatch, useAppSelector } from 'src/hooks/useRedux';
 import { createDocument } from 'src/store/slices/documentSlice';
 import { FormInput } from '../common/FormInput';
-import { useSelector } from 'react-redux';
 import { RootState } from 'src/store/store';
 
 interface DocumentFormData {
@@ -12,7 +11,7 @@ interface DocumentFormData {
 }
 
 export const DocumentForm = ({ onClose }: { onClose: () => void }) => {
-  const { isCreating } = useSelector((state: RootState) => state.document);
+  const { isCreating } = useAppSelector((state: RootState) => state.document);
   const dispatch = useAppDispatch();
   const {
     register,

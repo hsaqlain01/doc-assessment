@@ -2,6 +2,9 @@ import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import BackArrow from 'src/assets/svg/backArrow';
 import { DocumentActions } from 'src/components/documents/DocumentActions';
 import { FilePreview } from 'src/components/documents/FilePreview';
+import { useAppSelector } from 'src/hooks/useRedux';
+import { RootState } from 'src/store/store';
+import { UserRole } from 'src/types/common.types';
 import { Document } from 'src/types/document.types';
 
 interface LocationState {
@@ -13,7 +16,7 @@ export const DocumentDetailsPage = () => {
   const location = useLocation();
 
   const { document } = location.state as LocationState;
-
+  const { user } = useAppSelector((state: RootState) => state.auth);
   // If no document in state, redirect to documents list
   if (!document) {
     return <Navigate to='/documents' replace />;
@@ -63,7 +66,7 @@ export const DocumentDetailsPage = () => {
             >
               {document.status}
             </span>
-            {document.status === 'PENDING' && (
+            {document.status === 'PENDING' && user?.role !== UserRole.USER && (
               <DocumentActions document={document} />
             )}
           </div>

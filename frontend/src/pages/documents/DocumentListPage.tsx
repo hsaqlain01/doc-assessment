@@ -19,16 +19,20 @@ export const DocumentListPage = () => {
   }, [dispatch]);
 
   if (loading && !documents?.length) {
-    return <div>Loading...</div>;
+    return (
+      <div className='flex justify-center items-center min-h-screen'>
+        Loading...
+      </div>
+    );
   }
 
   return (
-    <div className='p-6'>
-      <div className='flex justify-between mb-6'>
-        <h1 className='text-2xl font-bold'>Documents</h1>
+    <div className='p-4 md:p-6 max-w-7xl mx-auto'>
+      <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6'>
+        <h1 className='text-xl md:text-2xl font-bold'>Documents</h1>
         <button
-          onClick={() => setShowCreateModal(true)} // Will implement modal later
-          className='bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700'
+          onClick={() => setShowCreateModal(true)}
+          className='w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors'
         >
           Create Document
         </button>
