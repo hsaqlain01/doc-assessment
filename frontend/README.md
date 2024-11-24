@@ -1,50 +1,126 @@
-# React + TypeScript + Vite
+# Document Approval System - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based frontend for a document approval system that allows users to create, view, and manage documents with an approval workflow.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔐 User Authentication (Login/Register)
+- 📑 Document Management
+- 👥 Role-based Access Control
+- 📁 File Upload & Preview
+- ✅ Document Approval Workflow
+- 🎨 Modern UI with Tailwind CSS
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- React 18
+- TypeScript
+- Redux Toolkit
+- React Router v6
+- Tailwind CSS
+- Headless UI
+- React Hook Form
+- Axios
+- React Hot Toast
 
-- Configure the top-level `parserOptions` property like this:
+## Prerequisites
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- Node.js (version 16 or later)
+- npm or yarn
+- Backend API running (see backend README)
+
+## Installation
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd document-approval-frontend
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+2. Install dependencies:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+npm install
+# or
+yarn install
 ```
+
+3. Create .env file:
+
+```env
+REACT_APP_API_URL=http://localhost:5000
+```
+
+4. Start the development server:
+
+```bash
+npm start
+# or
+yarn start
+```
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── auth/
+│   ├── documents/
+│   ├── ui/
+│   └── common/
+├── pages/
+│   ├── auth/
+│   ├── documents/
+│   └── dashboard/
+├── store/
+│   ├── slices/
+│   └── store.ts
+├── services/
+├── layouts/
+├── utils/
+├── types/
+└── App.tsx
+```
+
+## Available Scripts
+
+```bash
+# Start development server
+npm start
+```
+
+## Environment Variables
+
+| Variable          | Description     | Default               |
+| ----------------- | --------------- | --------------------- |
+| REACT_APP_API_URL | Backend API URL | http://localhost:5000 |
+
+## Features in Detail
+
+### Authentication
+
+- Login with email and password
+- Registration for new users
+- Protected routes
+- Role-based access control
+
+### Document Management
+
+- Create new documents with file attachments
+- View list of documents with status
+- Document details view with file preview
+- Approve/Reject documents (Manager role)
+
+### User Interface
+
+- Clean, modern design with Tailwind CSS
+- Responsive layout
+- Loading states
+- Error handling
+- Toast notifications
+- Modal dialogs
+
+## API Integration
+
+The frontend communicates with the backend using Axios. API service configuration can be found in `src/services/api.ts`.
