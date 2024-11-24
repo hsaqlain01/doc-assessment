@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 import { Document } from 'src/types/document.types';
 import { Modal } from '../common/Modal';
 import { DocumentReason } from './DocumentReason';
+import { useNavigate } from 'react-router-dom';
 
 interface DocumentActionsProps {
   document: Document;
@@ -17,6 +18,8 @@ export const DocumentActions = ({ document }: DocumentActionsProps) => {
   const [modalType, setModalType] = useState<'approve' | 'reject' | null>(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
 
   const handleAction = async (comment: string) => {
     if (!modalType) return;

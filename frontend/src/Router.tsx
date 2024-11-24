@@ -14,6 +14,7 @@ import { DocumentListPage } from 'src/pages/documents/DocumentListPage';
 // Error Pages
 import { NotFoundPage } from './pages/NotFoundPage';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
+import { DocumentDetailsPage } from './pages/documents/DocumentDetailsPage';
 
 const Router = () => {
   return (
@@ -36,6 +37,7 @@ const Router = () => {
           {/* Document Routes */}
           <Route path='/documents'>
             <Route index element={<DocumentListPage />} />
+            <Route path=":id" element={<DocumentDetailsPage />} />
           </Route>
         </Route>
       </Route>

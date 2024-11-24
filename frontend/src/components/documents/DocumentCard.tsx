@@ -5,6 +5,7 @@ import Clock from 'src/assets/svg/clock';
 import Upload from 'src/assets/svg/upload';
 import { RootState } from '../../store/store';
 import { DocumentActions } from './DocumentActions';
+import { useNavigate } from 'react-router-dom';
 
 interface DocumentCardProps {
   document: Document;
@@ -12,29 +13,64 @@ interface DocumentCardProps {
 
 export const DocumentCard = ({ document }: DocumentCardProps) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const navigate = useNavigate()
   const isManager = user?.role === 'MANAGER';
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'APPROVED':
+        return 'bg-green-100 text-green-800';
+      case 'REJECTED':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-yellow-100 text-yellow-800';
+    }
+  };
 
   return (
     <div className='bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300'>
       <div className='p-6'>
         <div className='flex justify-between items-start'>
           <div>
-            <h3 className='text-xl font-semibold text-gray-900'>
+            <h3 className="text-lg font-medium text-gray-900">
               {document.title}
             </h3>
-            <p className='mt-2 text-gray-600'>{document.description}</p>
+            <p className="mt-1 text-sm text-gray-500">
+              {document.description}
+            </p>
+            <div className="mt-2 text-sm text-gray-500">
+              Submitted by: {document.submittedBy.name}
+            </div>
           </div>
-          <span
-            className={`px-3 py-1 rounded-full text-sm font-medium ${
-              document.status === 'APPROVED'
-                ? 'bg-green-100 text-green-800'
-                : document.status === 'REJECTED'
-                ? 'bg-red-100 text-red-800'
-                : 'bg-yellow-100 text-yellow-800'
-            }`}
-          >
-            {document.status}
-          </span>
+          <div className="flex items-center space-x-3">
+            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(document.status)}`}>
+              {document.status}
+            </span>
+            <button
+              onClick={() => navigate(`/documents/${document._id}`, { state: { document } })}
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              title="View Details"
+            >
+              <svg
+                className="w-5 h-5 text-gray-600 hover:text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>          </button>
+          </div>
         </div>
 
         <div className='mt-4 space-y-2 text-sm text-gray-500'>

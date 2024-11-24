@@ -1,4 +1,4 @@
-import { User } from "./auth.types";
+import { User } from './auth.types';
 
 export interface Document {
   _id: string;
@@ -18,9 +18,9 @@ export interface Document {
 }
 
 export enum DocumentStatus {
-  PENDING = "PENDING",
-  APPROVED = "APPROVED",
-  REJECTED = "REJECTED",
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
 }
 
 export interface Attachment {
@@ -29,6 +29,7 @@ export interface Attachment {
   size: number;
   mimeType: string;
   path: string;
+  _id: string;
 }
 
 export interface DocumentState {
