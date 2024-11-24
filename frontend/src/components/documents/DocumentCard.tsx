@@ -28,37 +28,58 @@ export const DocumentCard = ({ document }: DocumentCardProps) => {
     }
   };
 
+  const StatusAndActions = () => (
+    <div className='flex items-center justify-between gap-3'>
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${getStatusColor(
+          document.status
+        )}`}
+      >
+        {document.status}
+      </span>
+      <button
+        onClick={() =>
+          navigate(`/documents/${document._id}`, { state: { document } })
+        }
+        className='p-2 hover:bg-gray-100 rounded-full transition-colors'
+        title='View Details'
+      >
+        <ViewIcon />
+      </button>
+    </div>
+  );
+
   return (
     <div className='bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300'>
       <div className='p-4 md:p-6'>
-        <div className='flex justify-between items-start gap-4'>
+        {/* Mobile Layout (Status at bottom) */}
+        <div className='block sm:hidden'>
           <div className='max-w-3xl'>
             <h3 className='text-base md:text-lg font-medium text-gray-900'>
               {document.title}
             </h3>
             <div className='mt-2'>
-              <p className='text-sm text-gray-500 lg:break-words'>
+              <p className='text-sm text-gray-500 break-words'>
+                {document.description}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout (Status at top) */}
+        <div className='hidden sm:flex justify-between items-start gap-4'>
+          <div className='max-w-3xl'>
+            <h3 className='text-base md:text-lg font-medium text-gray-900'>
+              {document.title}
+            </h3>
+            <div className='mt-2'>
+              <p className='text-sm text-gray-500 break-words'>
                 {document.description}
               </p>
             </div>
           </div>
           <div className='flex items-start space-x-3 flex-shrink-0'>
-            <span
-              className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${getStatusColor(
-                document.status
-              )}`}
-            >
-              {document.status}
-            </span>
-            <button
-              onClick={() =>
-                navigate(`/documents/${document._id}`, { state: { document } })
-              }
-              className='p-2 hover:bg-gray-100 rounded-full transition-colors'
-              title='View Details'
-            >
-              <ViewIcon />
-            </button>
+            <StatusAndActions />
           </div>
         </div>
 
@@ -94,6 +115,14 @@ export const DocumentCard = ({ document }: DocumentCardProps) => {
           </div>
         )}
 
+        {/* Mobile Status and Actions */}
+        <div className='block sm:hidden mt-4 border-t pt-4'>
+          <div className='flex justify-between items-center'>
+            <StatusAndActions />
+          </div>
+        </div>
+
+        {/* Document Actions (Approve/Reject) */}
         {isManager && document.status === 'PENDING' && (
           <div className='mt-4 md:mt-6 flex flex-wrap gap-2'>
             <DocumentActions document={document} />
